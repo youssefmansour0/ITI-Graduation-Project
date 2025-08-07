@@ -1,0 +1,181 @@
+  GNU nano 7.2                                                       /etc/metricbeat/modules.d/aws.yml                                                                 
+# Module: aws
+# Docs: https://www.elastic.co/guide/en/beats/metricbeat/8.19/metricbeat-module-aws.html
+
+# /etc/metricbeat/modules.d/aws.yml
+# Module: aws
+# Docs: https://www.elastic.co/guide/en/beats/metricbeat/8.19/metricbeat-module-aws.html
+# Metricbeat AWS CloudWatch module for Redshift-Serverless
+- module: aws
+  enabled: true
+  period: 60s                # poll every minute
+  data_granularity: 60s      # align with CW resolution
+  latency: 120s              # shift window by 2m to allow CW to publish
+  metricsets:
+    - cloudwatch
+  regions:
+    - eu-west-1
+  endpoint: monitoring.eu-west-1.amazonaws.com
+  include_linked_accounts: true
+
+  metrics:
+
+    # ─── Compute & Billing ───────────────────────────────────────────────
+    - namespace: "AWS/Redshift-Serverless"
+      resource_type: "redshift-serverless:workgroup"
+      names:
+        - ComputeCapacity
+        - ComputeSeconds
+        - ChargedSeconds
+      dimensions:
+        - name: Workgroup
+          value: project-workgroup
+      statistics: [Average,Maximum,Sum]
+
+    # ─── Connection Metrics ───────────────────────────────────────────────
+    - namespace: "AWS/Redshift-Serverless"
+      resource_type: "redshift-serverless:workgroup"
+      names:
+        - DatabaseConnections
+      dimensions:
+        - name: Workgroup
+          value: project-workgroup
+      statistics: [Average,Maximum,Sum]
+
+    # ─── Query COUNTS by TYPE ─────────────────────────────────────────────
+    # one block per QueryType you care about
+    - namespace: "AWS/Redshift-Serverless"
+      resource_type: "redshift-serverless:workgroup"
+      names: ["QueriesRunning","QueriesSucceeded","QueriesFailed"]
+      dimensions:
+        - name: Workgroup
+          value: project-workgroup
+        - name: DatabaseName
+          value: dwh
+        - name: QueryType
+          value: SELECT
+      statistics: [Average,Maximum,Sum]
+
+    - namespace: "AWS/Redshift-Serverless"
+      resource_type: "redshift-serverless:workgroup"
+      names: ["QueriesRunning","QueriesSucceeded","QueriesFailed"]
+      dimensions:
+        - name: Workgroup
+          value: project-workgroup
+        - name: DatabaseName
+          value: dwh
+        - name: QueryType
+          value: COPY
+      statistics: [Average,Maximum,Sum]
+
+    - namespace: "AWS/Redshift-Serverless"
+      resource_type: "redshift-serverless:workgroup"
+      names: ["QueriesRunning","QueriesSucceeded","QueriesFailed"]
+      dimensions:
+        - name: Workgroup
+          value: project-workgroup
+        - name: DatabaseName
+          value: dwh
+        - name: QueryType
+          value: OTHER
+      statistics: [Average,Maximum,Sum]
+
+    - namespace: "AWS/Redshift-Serverless"
+      resource_type: "redshift-serverless:workgroup"
+      names: ["QueriesRunning","QueriesSucceeded","QueriesFailed"]
+      dimensions:
+        - name: Workgroup
+          value: project-workgroup
+        - name: DatabaseName
+          value: dwh
+        - name: QueryType
+          value: UTILITY
+      statistics: [Average,Maximum,Sum]
+
+    # ─── Query LATENCY buckets ────────────────────────────────────────────
+    - namespace: "AWS/Redshift-Serverless"
+      resource_type: "redshift-serverless:workgroup"
+      names: ["QueryDuration","QueriesCompletedPerSecond"]
+      dimensions:
+        - name: Workgroup
+          value: project-workgroup
+        - name: DatabaseName
+          value: dwh
+        - name: LatencyRange
+          value: Short
+      statistics: [Average,Maximum,Sum]
+
+    - namespace: "AWS/Redshift-Serverless"
+      resource_type: "redshift-serverless:workgroup"
+      names: ["QueryDuration","QueriesCompletedPerSecond"]
+      dimensions:
+        - name: Workgroup
+          value: project-workgroup
+        - name: DatabaseName
+          value: dwh
+        - name: LatencyRange
+          value: Medium
+      statistics: [Average,Maximum,Sum]
+
+    - namespace: "AWS/Redshift-Serverless"
+      resource_type: "redshift-serverless:workgroup"
+      names: ["QueryDuration","QueriesCompletedPerSecond"]
+      dimensions:
+        - name: Workgroup
+          value: project-workgroup
+        - name: DatabaseName
+          value: dwh
+       - name: LatencyRange
+          value: Long
+      statistics: [Average,Maximum,Sum]
+
+    # ─── Query RUNTIME breakdown (optional) ───────────────────────────────
+    # e.g. QueryPlanning, QueryCommit, QueryExecutingRead, etc.
+    - namespace: "AWS/Redshift-Serverless"
+      resource_type: "redshift-serverless:workgroup"
+      names: ["QueryRuntimeBreakdown"]
+      dimensions:
+        - name: Workgroup
+          value: project-workgroup
+        - name: DatabaseName
+          value: dwh
+        - name: stage
+          value: QueryPlanning
+      statistics: [Average,Maximum,Sum]
+
+    - namespace: "AWS/Redshift-Serverless"
+      resource_type: "redshift-serverless:workgroup"
+      names: ["QueryRuntimeBreakdown"]
+      dimensions:
+        - name: Workgroup
+          value: project-workgroup
+        - name: DatabaseName
+          value: dwh
+        - name: stage
+          value: QueryCommit
+      statistics: [Average,Maximum,Sum]
+
+    # ─── Storage / Namespace Metrics ───────────────────────────────────────
+    - namespace: "AWS/Redshift-Serverless"
+      resource_type: "redshift-serverless:workgroup"
+      names:
+        - DataStorage
+        - RedshiftManagedStorageDsUsedSpace
+        - RedshiftManagedStorageBilledUsedSpace
+        - SnapshotStorage
+      dimensions:
+        - name: Namespace
+          value: project-namespace
+      statistics: [Average,Maximum,Sum]
+
+    # ─── Table Counts ─────────────────────────────────────────────────────
+    - namespace: "AWS/Redshift-Serverless"
+      resource_type: "redshift-serverless:workgroup"
+      names:
+        - TotalTableCount
+      dimensions:
+        - name: Namespace
+          value: project-namespace
+        - name: DatabaseName
+          value: dwh
+      statistics: [Average,Maximum,Sum]

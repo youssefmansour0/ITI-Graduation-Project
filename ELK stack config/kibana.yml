@@ -1,0 +1,18 @@
+server.host: "0.0.0.0"
+elasticsearch.hosts: ["http://localhost:9200"]
+logging:
+  appenders:
+    file:
+      type: file
+      fileName: /var/log/kibana/kibana.log
+      layout:
+        type: json
+  root:
+    appenders:
+      - default
+      - file
+pid.file: /run/kibana/kibana.pid
+xpack.apm.enabled: false
+xpack.apm.ui.enabled: false
+xpack.security.authc.providers: [ basic ]
+xpack.security.authc.selector.enabled: false
