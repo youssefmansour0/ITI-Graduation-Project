@@ -81,23 +81,41 @@ This pipeline enables near real-time operational insight into e-commerce transac
 ## 📁 Repository Structure
 
 ```bash
-├── spark-jobs/
-│   └── clean_transform.py
-├── lambda/
-│   └── s3_cleanup.py
-├── kafka-config/
-│   └── connector-config.json
-├── dashboards/
-│   └── powerbi.pbix
-├── monitoring/
-│   ├── metricbeat.yml
-│   ├── filebeat.yml
-│   └── logstash.conf
-├── architecture/
-│   └── diagrams.pdf/png
-├── README.md
-└── report/
-    └── Final_Report.docx
+Project_Root/
+│
+├── Architecture/
+│   └── Architecture diagram.jpeg
+│
+├── ELK stack config/
+│   ├── aws.yml
+│   ├── beats.conf
+│   ├── elasticsearch.yml
+│   ├── kibana.yml
+│   └── metricbeat(redshift).yml
+│
+├── EMR and Lambda Codes/
+│   ├── SPARK.py
+│   ├── annihilateDWH.py
+│   ├── clone.sh
+│   ├── emrDevilTrigger.py
+│   └── exterminateTopics.py
+│
+├── Final Report/
+│   └── Comprehensive_E-Commerce_I...
+│
+├── Redshift Load/
+│   ├── redshift_import.py
+│   ├── rejected-copy.py
+│   └── truncate.py
+│
+├── docker image & ECS/
+│   ├── Dockerfile
+│   ├── data_generator.py
+│   ├── docker_compose.yml
+│   ├── requirements.txt
+│   └── transaction.avsc
+│
+└── README.md
 ```
 
 ---
