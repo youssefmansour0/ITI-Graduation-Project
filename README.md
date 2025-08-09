@@ -17,7 +17,7 @@ This pipeline enables near real-time operational insight into e-commerce transac
 ---
 
 ## 🧱 Architecture
-![Alt Text](Architecture/Architecture diagram.jpeg)
+![Alt Text](Architecture/Architecture%20diagram.jpeg)
 
 1. **Data Generation**: Python script generates synthetic e-commerce events every 5 seconds in Avro format and sends 10,000 records to Kafka.
 2. **Kafka Broker**: Kafka is hosted on EC2, with a single-node setup configured with producers, topics, and a Kafka → S3 connector.
