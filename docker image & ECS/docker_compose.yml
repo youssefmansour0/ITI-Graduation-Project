@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  ecommerce-data-generator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILD_DATE: ${BUILD_DATE:-$(date -u +'%Y-%m-%dT%H:%M:%SZ')}
+        VERSION: "2.1.0"
+    container_name: ecommerce-avro-generator
+    restart: unless-stopped
+    
+    environment:
+      # Kafka Configuration
+      - KAFKA_BROKER=54.75.133.233:9092
+      - SCHEMA_REGISTRY_URL=http://54.75.133.233:8081
+      - KAFKA_TOPIC=ecommerce-events
+      
+      # Generation Configuration
+      - RECORDS_PER_BATCH=1000
+      - BATCH_INTERVAL_SECONDS=5
+      - SCRIPT_DURATION_SECONDS=18000
+      - CORRUPTION_PROBABILITY=0.001
+      
+      # Logging Configuration
+      - LOG_LEVEL=INFO
+      - PYTHONUNBUFFERED=1
+      
+    volumes:
+      # Mount logs directory for persistence
+      - ./logs:/app/logs
+      # Mount schema file if you want to modify it externally
+      - ./transaction.avsc:/app/transaction.avsc:ro
+      
+    networks:
+      - kafka-network
+      
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "python", "-c", "from confluent_kafka import avro; print('OK')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+      
+    labels:
+      - "com.example.description=E-commerce Data Generator with Confluent Kafka Avro"
+      - "com.example.version=2.1.0"
+      - "com.example.team=data-engineering"
+
+networks:
+  kafka-network:
+    driver: bridge
+    name: ecommerce-kafka-network
+
+# Optional: Add volume for persistent logs
+volumes:
+  generator-logs:
+    driver: local

@@ -1,0 +1,200 @@
+{
+  "type": "record",
+  "namespace": "com.ecommerce.events",
+  "name": "Transaction",
+  "doc": "E-commerce transaction event schema for Confluent Kafka with Avro",
+  "fields": [
+    {
+      "name": "event_id",
+      "type": "string",
+      "doc": "Unique UUID for each transaction event"
+    },
+    {
+      "name": "quantity",
+      "type": "int",
+      "doc": "Number of items purchased (1-5, ~1% negative for testing)"
+    },
+    {
+      "name": "total_amount",
+      "type": ["null", "double"],
+      "default": null,
+      "doc": "Always null - calculated by ETL pipeline"
+    },
+    {
+      "name": "feedback_score",
+      "type": ["null", "int"],
+      "default": null,
+      "doc": "Customer feedback score (1-5, ~10% null, ~5% out-of-range)"
+    },
+    {
+      "name": "user_id",
+      "type": ["null", "string"],
+      "default": null,
+      "doc": "User identifier (~1% null for testing)"
+    },
+    {
+      "name": "user_name",
+      "type": "string",
+      "doc": "User's full name"
+    },
+    {
+      "name": "user_email",
+      "type": "string",
+      "doc": "User's email address"
+    },
+    {
+      "name": "user_phone",
+      "type": ["null", "string"],
+      "default": null,
+      "doc": "User's phone number (~10% malformed)"
+    },
+    {
+      "name": "is_first_purchase",
+      "type": "boolean",
+      "default": false,
+      "doc": "True only for the first appearance of a user_id"
+    },
+    {
+      "name": "language",
+      "type": "string",
+      "doc": "User's preferred language"
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "doc": "Transaction currency"
+    },
+    {
+      "name": "city_name",
+      "type": "string",
+      "doc": "User's city"
+    },
+    {
+      "name": "country_name",
+      "type": "string",
+      "doc": "User's country"
+    },
+    {
+      "name": "product_id",
+      "type": "int",
+      "doc": "Product identifier from catalog"
+    },
+    {
+      "name": "product_name",
+      "type": "string",
+      "doc": "Product name"
+    },
+    {
+      "name": "product_category",
+      "type": "string",
+      "doc": "Product category (with case inconsistencies)"
+    },
+    {
+      "name": "product_brand",
+      "type": "string",
+      "doc": "Product brand"
+    },
+    {
+      "name": "product_price",
+      "type": ["string", "double"],
+      "doc": "Product price (~5% as string with currency symbols, rest as double)"
+    },
+    {
+      "name": "shipping_address",
+      "type": ["null", "string"],
+      "default": null,
+      "doc": "Shipping address"
+    },
+    {
+      "name": "postal_code",
+      "type": ["null", "string"],
+      "default": null,
+      "doc": "Postal/ZIP code"
+    },
+    {
+      "name": "device_type",
+      "type": "string",
+      "doc": "Device used for transaction"
+    },
+    {
+      "name": "browser",
+      "type": "string",
+      "doc": "Browser used"
+    },
+    {
+      "name": "referral_source",
+      "type": ["null", "string"],
+      "default": null,
+      "doc": "Traffic referral source (~15% null)"
+    },
+    {
+      "name": "campaign",
+      "type": ["null", "string"],
+      "default": null,
+      "doc": "Marketing campaign (~15% null)"
+    },
+    {
+      "name": "coupon_code",
+      "type": ["null", "string"],
+      "default": null,
+      "doc": "Applied coupon code (~15% null)"
+    },
+    {
+      "name": "coupon_code_flag",
+      "type": ["null", "boolean"],
+      "default": null,
+      "doc": "True if coupon_code exists"
+    },
+    {
+      "name": "payment_method",
+      "type": "string",
+      "doc": "Payment method used"
+    },
+    {
+      "name": "payment_status",
+      "type": "string",
+      "doc": "Payment status"
+    },
+    {
+      "name": "transaction_status",
+      "type": "string",
+      "doc": "Overall transaction status"
+    },
+    {
+      "name": "action_type",
+      "type": "string",
+      "doc": "Type of action performed"
+    },
+    {
+      "name": "event_timestamp",
+      "type": ["null", "string"],
+      "default": null,
+      "doc": "ISO 8601 timestamp (~1% future, ~1% null)"
+    },
+    {
+      "name": "dt_date",
+      "type": "string",
+      "doc": "Date derived from event_timestamp (YYYY-MM-DD)"
+    },
+    {
+      "name": "year",
+      "type": "int",
+      "doc": "Year derived from event_timestamp"
+    },
+    {
+      "name": "month",
+      "type": "int",
+      "doc": "Month derived from event_timestamp"
+    },
+    {
+      "name": "day",
+      "type": "int",
+      "doc": "Day derived from event_timestamp"
+    },
+    {
+      "name": "hour",
+      "type": "int",
+      "doc": "Hour derived from event_timestamp"
+    }
+  ]
+}
